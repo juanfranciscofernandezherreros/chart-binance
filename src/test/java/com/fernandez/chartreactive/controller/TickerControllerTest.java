@@ -26,7 +26,7 @@ class TickerControllerTest {
     private WebTestClient client;
 
     @Test
-    void getIsDataReady() {
+    void findAllTickerBySymbolTest() {
         Mockito.when(service.findAll("ADAUSDT")).thenReturn(Flux.just(new TickerDTO(), new TickerDTO()));
         client.get()
                 .uri("/?symbol=ADAUSDT")
