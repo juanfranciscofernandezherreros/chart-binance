@@ -13,8 +13,8 @@ public class TickerServiceImpl implements TickerService{
     private final TickerRepository tickerRepository;
 
     @Override
-    public Flux<TickerDTO> findAll() {
-        Flux<TickerDTO> tickerDTOList = tickerRepository.findAllBySymbol("ADAUSDT");
+    public Flux<TickerDTO> findAll(String symbol) {
+        Flux<TickerDTO> tickerDTOList = tickerRepository.findAllBySymbol(symbol);
         return  tickerDTOList;
     }
 

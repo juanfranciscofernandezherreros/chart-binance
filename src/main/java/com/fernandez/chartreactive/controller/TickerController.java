@@ -19,8 +19,8 @@ public class TickerController {
     private TickerService tickerService;
 
     @GetMapping(value="/",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    private Flux<TickerDTO> findAll() {
-        return this.tickerService.findAll();
+    private Flux<TickerDTO> findAll(@RequestParam("symbol") String symbol) {
+        return this.tickerService.findAll(symbol);
     }
 
 }

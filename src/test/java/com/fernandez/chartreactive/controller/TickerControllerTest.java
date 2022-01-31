@@ -17,7 +17,7 @@ import reactor.core.publisher.Flux;
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = TickerController.class)
 @Import(TickerService.class)
-class AggregateControllerTest {
+class TickerControllerTest {
 
     @MockBean
     TickerService service;
@@ -27,9 +27,9 @@ class AggregateControllerTest {
 
     @Test
     void getIsDataReady() {
-        Mockito.when(service.findAll()).thenReturn(Flux.just(new TickerDTO(), new TickerDTO()));
+        Mockito.when(service.findAll("ADAUSDT")).thenReturn(Flux.just(new TickerDTO(), new TickerDTO()));
         client.get()
-                .uri("/")
+                .uri("/?symbol=ADAUSDT")
                 .accept(MediaType.valueOf(MediaType.TEXT_EVENT_STREAM_VALUE))
                 .exchange()
                 .expectStatus().isOk();

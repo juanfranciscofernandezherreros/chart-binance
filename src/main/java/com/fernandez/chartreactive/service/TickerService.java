@@ -5,6 +5,6 @@ import reactor.core.publisher.Flux;
 
 public interface TickerService {
 
-    Flux<TickerDTO> findAll();
+    Flux<TickerDTO> findAll(String symbol);
 
 }
