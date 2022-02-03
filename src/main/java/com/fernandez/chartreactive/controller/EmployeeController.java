@@ -1,10 +1,10 @@
 package com.fernandez.chartreactive.controller;
 
+import com.fernandez.chartreactive.entity.Employee;
 import com.fernandez.chartreactive.entity.FilterCondition;
-import com.fernandez.chartreactive.entity.Ticker;
 import com.fernandez.chartreactive.repository.support.GenericFilterCriteriaBuilder;
+import com.fernandez.chartreactive.service.EmployeeService;
 import com.fernandez.chartreactive.service.FilterBuilderService;
-import com.fernandez.chartreactive.service.TickerService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Query;
@@ -17,17 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/ticker")
-public class TickerController {
 
-    private final TickerService tickerService;
+@RestController
+@RequestMapping("/employee")
+public class EmployeeController {
+
+    private final EmployeeService employeeService;
     private final FilterBuilderService filterBuilderService;
 
-    public TickerController(TickerService tickerService, FilterBuilderService filterBuilderService) {
-        this.tickerService = tickerService;
+    public EmployeeController(EmployeeService employeeService, FilterBuilderService filterBuilderService) {
+        this.employeeService = employeeService;
         this.filterBuilderService = filterBuilderService;
     }
+
 
     /**
      * @param page      page number
@@ -38,22 +40,27 @@ public class TickerController {
      * @return PageResponse<Employee>
      */
     @GetMapping(value = "/page")
-    public ResponseEntity<PageResponse<Ticker>> getSearchCriteriaPage(
+    public ResponseEntity<PageResponse<Employee>> getSearchCriteriaPage(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "filterOr", required = false) String filterOr,
             @RequestParam(value = "filterAnd", required = false) String filterAnd,
             @RequestParam(value = "orders", required = false) String orders) {
 
-        PageResponse<Ticker> response = new PageResponse<>();
+        PageResponse<Employee> response = new PageResponse<>();
+
         Pageable pageable = filterBuilderService.getPageable(size, page, orders);
         GenericFilterCriteriaBuilder filterCriteriaBuilder = new GenericFilterCriteriaBuilder();
+
+
         List<FilterCondition> andConditions = filterBuilderService.createFilterCondition(filterAnd);
         List<FilterCondition> orConditions = filterBuilderService.createFilterCondition(filterOr);
+
         Query query = filterCriteriaBuilder.addCondition(andConditions, orConditions);
-        Page<Ticker> pg = tickerService.getPage(query, pageable);
+        Page<Employee> pg = employeeService.getPage(query, pageable);
         response.setPageStats(pg, pg.getContent());
         return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     /**
@@ -62,7 +69,7 @@ public class TickerController {
      * @return list of Employee
      */
     @GetMapping()
-    public ResponseEntity<List<Ticker>> getAllSearchCriteria(
+    public ResponseEntity<List<Employee>> getAllSearchCriteria(
             @RequestParam(value = "filterOr", required = false) String filterOr,
             @RequestParam(value = "filterAnd", required = false) String filterAnd) {
 
@@ -72,7 +79,8 @@ public class TickerController {
         List<FilterCondition> orConditions = filterBuilderService.createFilterCondition(filterOr);
 
         Query query = filterCriteriaBuilder.addCondition(andConditions, orConditions);
-        List<Ticker> employees = tickerService.getAll(query);
+        List<Employee> employees = employeeService.getAll(query);
+
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 

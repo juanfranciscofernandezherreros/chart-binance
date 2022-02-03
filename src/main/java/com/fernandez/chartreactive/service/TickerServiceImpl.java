@@ -1,21 +1,32 @@
 package com.fernandez.chartreactive.service;
 
-import com.fernandez.chartreactive.entity.TickerDTO;
+import com.fernandez.chartreactive.entity.Ticker;
 import com.fernandez.chartreactive.repository.TickerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TickerServiceImpl implements TickerService{
 
     private final TickerRepository tickerRepository;
 
+    public TickerServiceImpl(TickerRepository tickerRepository) {
+        this.tickerRepository = tickerRepository;
+    }
+
     @Override
-    public Flux<TickerDTO> findAll(String symbol) {
-        Flux<TickerDTO> tickerDTOList = tickerRepository.findAllBySymbol(symbol);
-        return  tickerDTOList;
+    public List<Ticker> getAll(Query query) {
+        return tickerRepository.findAll(query);
+    }
+
+    @Override
+    public Page<Ticker> getPage(Query query, Pageable pageable) {
+        return tickerRepository.findAll(query, pageable);
     }
 
 }
