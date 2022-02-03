@@ -22,7 +22,6 @@ public class PageResponse<T> {
     private boolean last;
     private int itemsPerPage;
     private int pageSize;
-
     private List<T> items;
 
     public void setPageStats(Page pg, List<T> elts) {

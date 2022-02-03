@@ -1,5 +1,6 @@
 package com.fernandez.chartreactive.controller;
 
+import com.fernandez.chartreactive.entity.Employee;
 import com.fernandez.chartreactive.entity.FilterCondition;
 import com.fernandez.chartreactive.entity.Ticker;
 import com.fernandez.chartreactive.repository.support.GenericFilterCriteriaBuilder;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/ticker")
@@ -46,10 +50,14 @@ public class TickerController {
             @RequestParam(value = "orders", required = false) String orders) {
 
         PageResponse<Ticker> response = new PageResponse<>();
+
         Pageable pageable = filterBuilderService.getPageable(size, page, orders);
         GenericFilterCriteriaBuilder filterCriteriaBuilder = new GenericFilterCriteriaBuilder();
+
+
         List<FilterCondition> andConditions = filterBuilderService.createFilterCondition(filterAnd);
         List<FilterCondition> orConditions = filterBuilderService.createFilterCondition(filterOr);
+
         Query query = filterCriteriaBuilder.addCondition(andConditions, orConditions);
         Page<Ticker> pg = tickerService.getPage(query, pageable);
         response.setPageStats(pg, pg.getContent());
